@@ -4,7 +4,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index",
-    "dev": "ts-node index"
+    "dev": "ts-node api/index"
   },
   "dependencies": {
     "@sinclair/typebox": "^0.33.15",
