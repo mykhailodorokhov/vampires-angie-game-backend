@@ -15,19 +15,18 @@ fastify.register(async () => {
   });
 });
 
-async function main() {
-  try {
-    await fastify.listen({ port: 3000, host: "0.0.0.0" });
-    console.log("server is running ✅");
-  } catch (e) {
-    console.log("error 🫡");
-    console.log((e as Error).message);
-  }
-}
+// async function main() {
+//   try {
+//     await fastify.listen({ port: 3000, host: "0.0.0.0" });
+//     console.log("server is running ✅");
+//   } catch (e) {
+//     console.log("error 🫡");
+//     console.log((e as Error).message);
+//   }
+// }
+// main();
 
-main();
-
-// export default async (req: any, res: any) => {
-//   await fastify.ready();
-//   fastify.server.emit("request", req, res);
-// };
+export default async (req: any, res: any) => {
+  await fastify.ready();
+  fastify.server.emit("request", req, res);
+};
