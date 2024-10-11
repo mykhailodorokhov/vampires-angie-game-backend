@@ -20,4 +20,4 @@ Gets information about a players. If a players if a vampire, gets information ab
 
 Updates players name.
 
-Body format: `{ name: "new name"}`
+Body format: `{ "name": "new name"}`
