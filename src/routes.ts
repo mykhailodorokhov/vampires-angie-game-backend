@@ -52,7 +52,7 @@ function getPlayersGenerate(fastify: FastifyInstance): RouteOptions {
         });
       }
 
-      utils.saveData(players);
+      await utils.saveData(players);
       return reply.code(201).send(players);
     },
   };

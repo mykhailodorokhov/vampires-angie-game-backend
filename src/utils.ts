@@ -1,8 +1,8 @@
 import { kv } from "@vercel/kv";
 import { playersDataType } from "./types";
 
-export function saveData(data: playersDataType) {
-  kv.set("players-data", data);
+export async function saveData(data: playersDataType) {
+  await kv.set("players-data", data);
 }
 
 export async function loadData() {
