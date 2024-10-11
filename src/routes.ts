@@ -1,29 +1,14 @@
-import { Static, Type } from "@sinclair/typebox";
 import { FastifyInstance, RouteOptions } from "fastify";
+import {
+  generateQuerySchema,
+  generateQueryType,
+  idParamsSchema,
+  idParamsType,
+  namePlayerBodySchema,
+  namePlayerBodyType,
+  playersDataType,
+} from "./types";
 import * as utils from "./utils";
-
-type playerDataType = {
-  name: string | undefined;
-  vampire: boolean;
-  id: string;
-};
-
-type playersDataType = Array<playerDataType>;
-
-const generateQuerySchema = Type.Object({
-  n: Type.Number(),
-  v: Type.Optional(Type.Number()),
-});
-const idParamsSchema = Type.Object({
-  id: Type.String(),
-});
-const namePlayerBodySchema = Type.Object({
-  name: Type.String(),
-});
-
-type generateQueryType = Static<typeof generateQuerySchema>;
-type idParamsType = Static<typeof idParamsSchema>;
-type namePlayerBodyType = Static<typeof namePlayerBodySchema>;
 
 export default async function (fastify: FastifyInstance) {
   fastify.route(getPlayersGenerate(fastify));
@@ -83,7 +68,7 @@ function getPlayersId(fastify: FastifyInstance): RouteOptions {
     handler: async (request, reply) => {
       const { id } = request.params as idParamsType;
 
-      const playersData: playersDataType = utils.loadData();
+      const playersData: playersDataType = await utils.loadData();
 
       const player = playersData.find((x) => x.id === id);
       if (!player)
@@ -116,7 +101,7 @@ function patchPlayersId(fastify: FastifyInstance): RouteOptions {
       const { id } = request.params as idParamsType;
       const { name } = request.body as namePlayerBodyType;
 
-      const playersData: playersDataType = utils.loadData();
+      const playersData: playersDataType = await utils.loadData();
 
       const player = playersData.find((x) => x.id === id);
       if (!player)
