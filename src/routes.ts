@@ -1,3 +1,4 @@
+import { kv } from "@vercel/kv";
 import { FastifyInstance, RouteOptions } from "fastify";
 import {
   generateQuerySchema,
@@ -9,6 +10,8 @@ import {
   playersDataType,
 } from "./types";
 import * as utils from "./utils";
+
+const KV_PLAYERS_KEY = "players-data";
 
 export default async function (fastify: FastifyInstance) {
   fastify.route(getPlayersGenerate(fastify));
@@ -42,18 +45,18 @@ function getPlayersGenerate(fastify: FastifyInstance): RouteOptions {
         return reply.code(400).send({ errors });
       }
 
-      const players: playersDataType = [];
+      const playersData: playersDataType = [];
 
       for (let i = 0; i < numberOfPlayers; i++) {
-        players.push({
+        playersData.push({
           name: undefined,
           vampire: i < (numberOfVampires ?? 2) ? true : false,
           id: utils.generateIdentifier(10),
         });
       }
 
-      await utils.saveData(players);
-      return reply.code(201).send(players);
+      await kv.set(KV_PLAYERS_KEY, playersData);
+      reply.code(201).send(playersData);
     },
   };
 }
@@ -68,7 +71,9 @@ function getPlayersId(fastify: FastifyInstance): RouteOptions {
     handler: async (request, reply) => {
       const { id } = request.params as idParamsType;
 
-      const playersData: playersDataType = await utils.loadData();
+      const playersData: playersDataType = (await await kv.get(
+        KV_PLAYERS_KEY
+      )) as playersDataType;
 
       const player = playersData.find((x) => x.id === id);
       if (!player)
@@ -84,7 +89,7 @@ function getPlayersId(fastify: FastifyInstance): RouteOptions {
         });
       }
 
-      return reply.code(201).send(player);
+      reply.code(201).send(player);
     },
   };
 }
@@ -101,15 +106,18 @@ function patchPlayersId(fastify: FastifyInstance): RouteOptions {
       const { id } = request.params as idParamsType;
       const { name } = request.body as namePlayerBodyType;
 
-      const playersData: playersDataType = await utils.loadData();
+      const playersData: playersDataType = (await await kv.get(
+        KV_PLAYERS_KEY
+      )) as playersDataType;
 
       const player = playersData.find((x) => x.id === id);
       if (!player)
         return reply.code(404).send({ message: "no players with this id" });
 
       player.name = name;
-      await utils.saveData(playersData);
-      return reply.code(200);
+
+      await kv.set(KV_PLAYERS_KEY, playersData);
+      reply.code(200);
     },
   };
 }
