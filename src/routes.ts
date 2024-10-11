@@ -108,7 +108,7 @@ function patchPlayersId(fastify: FastifyInstance): RouteOptions {
         return reply.code(404).send({ message: "no players with this id" });
 
       player.name = name;
-      utils.saveData(playersData);
+      await utils.saveData(playersData);
       return reply.code(200);
     },
   };
