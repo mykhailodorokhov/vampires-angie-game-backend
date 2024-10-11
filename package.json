@@ -1,0 +1,20 @@
+{
+  "name": "angie-game",
+  "author": "Mykhailo Dorokhov",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index",
+    "dev": "ts-node index"
+  },
+  "dependencies": {
+    "@sinclair/typebox": "^0.33.15",
+    "@types/node": "^22.7.5",
+    "fastify": "^5.0.0",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "^20.1.4",
+    "@vercel/node": "^3.2.23",
+    "typescript": "^5.6.3"
+  }
+}
